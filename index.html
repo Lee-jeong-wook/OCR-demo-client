@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>번호판 인식 시스템</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>번호판 인식 시스템</h1>
+        </div>
+
+        <div class="content">
+            <div class="upload-section">
+                <input type="file" id="video-input" accept="video/*">
+                <button class="upload-btn" onclick="document.getElementById('video-input').click()">
+                    동영상 선택 및 분석 시작
+                </button>
+                <p style="margin-top: 15px; color: #666;">실시간으로 번호판을 탐지하고 인식합니다</p>
+            </div>
+
+            <div id="status"></div>
+
+            <div class="progress-bar" id="progress-container" style="display:none;">
+                <div class="progress-fill" id="progress-fill">0%</div>
+            </div>
+
+            <div class="video-container" id="video-container" style="display:none;">
+                <div class="video-display">
+                    <canvas id="canvas"></canvas>
+                </div>
+
+                <div class="info-panel">
+                    <h3>실시간 정보</h3>
+                    <div class="stats">
+
+                    </div>
+                    <h3 style="margin-top: 20px;">인식된 번호판</h3>
+                    <div class="detections" id="detections"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
