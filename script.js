@@ -53,6 +53,7 @@ function showStatus(message, type) {
 }
 
 videoInput.addEventListener('change', async (e) => {
+    console.log("change detected");
     const file = e.target.files[0];
     if (!file) return;
     
@@ -72,10 +73,6 @@ videoInput.addEventListener('change', async (e) => {
 socket.on('upload_success', (data) => {
     showStatus('업로드 완료! 번호판 인식 중...', 'processing');
     videoContainer.style.display = 'grid';
-});
-
-socket.on('video_info', (data) => {
-    document.getElementById('fps-value').textContent = data.fps;
 });
 
 socket.on('frame', (data) => {
@@ -114,6 +111,9 @@ socket.on('completed', (data) => {
     showStatus(`분석 완료!`);
     progressFill.style.width = '100%';
     progressFill.textContent = '100%';
+    videoInput.files[0] = null;
+    videoInput.value = null;
+    console.log(videoInput.files[0]);
 });
 
 socket.on('error', (data) => {
