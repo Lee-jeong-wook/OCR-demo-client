@@ -16,7 +16,7 @@
 
         <div class="content">
             <div class="upload-section">
-                <input type="file" id="video-input" accept="video/*">
+                <input type="file" id="video-input" accept="*">
                 <button class="upload-btn" onclick="document.getElementById('video-input').click()">
                     동영상 선택 및 분석 시작
                 </button>
@@ -24,7 +24,8 @@
             </div>
 
             <div id="status"></div>
-
+                <div>총 영상 길이: <span class="video_time"></span>초</div>
+                <div>총 재생 시간: <span class="video_play_time"></span>초</div>
             <div class="progress-bar" id="progress-container" style="display:none;">
                 <div class="progress-fill" id="progress-fill">0%</div>
             </div>

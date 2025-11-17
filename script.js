@@ -7,7 +7,7 @@ const videoContainer = document.getElementById('video-container');
 const progressContainer = document.getElementById('progress-container');
 const progressFill = document.getElementById('progress-fill');
 
-const predictQueue = [];
+let predictQueue = [];
 const predictMap = new Map()
 
 let tmp = 0;
@@ -59,7 +59,8 @@ videoInput.addEventListener('change', async (e) => {
     
     showStatus('업로드 중...', 'processing');
     videoContainer.style.display = 'none';
-    
+    predictQueue = [];
+    predictMap.clear();
     // 파일을 Base64로 변환
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -67,11 +68,12 @@ videoInput.addEventListener('change', async (e) => {
             video: event.target.result
         });
     };
+    videoInput.value = null;
     reader.readAsDataURL(file);
 });
 
 socket.on('upload_success', (data) => {
-    showStatus('업로드 완료! 번호판 인식 중...', 'processing');
+    showStatus('번호판 인식 중...', 'processing');
     videoContainer.style.display = 'grid';
 });
 
@@ -91,6 +93,7 @@ socket.on('frame', (data) => {
         detectionsDiv.innerHTML = data.detections.map(det => {
             const bgColor = '#d4edda';
             const textColor = '#155724';
+            console.log(det.plate_text);
             const txt = getPredictPlate(det.status === 'success' ? det.plate_text : null);
             return `
                 <div class="detection-item" style="background: ${bgColor};">
@@ -107,13 +110,15 @@ socket.on('frame', (data) => {
     }
 });
 
+socket.on('video_info', (data) => {
+    document.querySelector(".video_time").textContent = data.duration;
+});
+
 socket.on('completed', (data) => {
-    showStatus(`분석 완료!`);
+    showStatus(`분석 완료`);
     progressFill.style.width = '100%';
     progressFill.textContent = '100%';
-    videoInput.files[0] = null;
-    videoInput.value = null;
-    console.log(videoInput.files[0]);
+    document.querySelector(".video_play_time").textContent = data.video_play_time;
 });
 
 socket.on('error', (data) => {
