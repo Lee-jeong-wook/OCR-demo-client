@@ -117,8 +117,6 @@ socket.on('video_info', (data) => {
 
 socket.on('completed', (data) => {
     showStatus(`분석 완료`);
-    progressFill.style.width = '100%';
-    progressFill.textContent = '100%';
     document.querySelector(".video_play_time").textContent = data.video_play_time;
 });
 
@@ -153,6 +151,9 @@ document.querySelectorAll("nav>div").forEach(e => {
         i.classList.toggle("active");
     }
     })
+})
+picInput.addEventListener('click', (e) => {
+    e.target.value = null;
 })
 
 picInput.addEventListener('change', (e) => {
