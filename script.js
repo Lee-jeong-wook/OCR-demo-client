@@ -2,6 +2,7 @@ const socket = io('http://127.0.0.1:5000');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const videoInput = document.getElementById('video-input');
+const picInput = document.getElementById('pic-input');
 const statusDiv = document.getElementById('status');
 const videoContainer = document.getElementById('video-container');
 const progressContainer = document.getElementById('progress-container');
@@ -131,4 +132,67 @@ socket.on('connect', () => {
 
 socket.on('disconnect', () => {
     console.log('WebSocket disconnected');
+});
+
+
+const picPreviewContainer = document.getElementById('pic-preview-container');
+const processPicBtn = document.getElementById('process-pic-btn');
+const picStatusDiv = document.getElementById('pic-status');
+
+function showPicStatus(message, type) {
+    picStatusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+}
+
+document.querySelectorAll("nav>div").forEach(e => {
+    e.addEventListener("click", ()=> {
+    if(e.classList.contains("active")) return;
+    for(i of e.parentElement.children){
+        i.classList.toggle("active");
+    }
+    for(i of document.querySelectorAll(".container>.content")){
+        i.classList.toggle("active");
+    }
+    })
+})
+
+picInput.addEventListener('change', (e) => {
+    const resDiv = document.getElementById("pic-results");
+    resDiv.style.display = 'none';
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
+    selectedPicFiles = files;
+    showPicStatus(`${files.length}개의 사진들 처리중....`, 'processing');
+    const formData = new FormData();
+    selectedPicFiles.forEach(file => {
+        formData.append('images', file);
+    });
+    
+    try {
+        
+        fetch(`http://127.0.0.1:5000/process_images`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const linkSource = `data:application/zip;base64,${data.zip_file}`;
+                const downloadLink = document.querySelector('#res-download');
+                downloadLink.href = linkSource;
+                downloadLink.download = data.filename;
+
+                const chartImg = document.getElementById('chart-image');
+                chartImg.src = data.chart_data;
+                showPicStatus(`성공`, 'success');
+                resDiv.style.display = 'block';
+            } else {
+                alert('처리 실패: ' + data.error);
+            }
+        }) 
+        
+    } catch (error) {
+        console.log(error);
+        showPicStatus(`오류: ${error.message}`, 'error');
+    }
 });

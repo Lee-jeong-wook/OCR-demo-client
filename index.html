@@ -9,12 +9,18 @@
 </head>
 
 <body>
+    <header>
+        <nav>
+            <div class="vid active">동영상 분석</div>
+            <div class="pic">사진 분석</div>
+        </nav>
+    </header>
     <div class="container">
         <div class="header">
             <h1>번호판 인식 시스템</h1>
         </div>
 
-        <div class="content">
+        <div class="content active">
             <div class="upload-section">
                 <input type="file" id="video-input" accept="*">
                 <button class="upload-btn" onclick="document.getElementById('video-input').click()">
@@ -24,11 +30,6 @@
             </div>
 
             <div id="status"></div>
-                <div>총 영상 길이: <span class="video_time"></span>초</div>
-                <div>총 재생 시간: <span class="video_play_time"></span>초</div>
-            <div class="progress-bar" id="progress-container" style="display:none;">
-                <div class="progress-fill" id="progress-fill">0%</div>
-            </div>
 
             <div class="video-container" id="video-container" style="display:none;">
                 <div class="video-display">
@@ -43,6 +44,28 @@
                     <h3 style="margin-top: 20px;">인식된 번호판</h3>
                     <div class="detections" id="detections"></div>
                 </div>
+            </div>
+        </div>
+
+       <div class="content pic-content">
+            <div class="upload-section">
+                <input type="file" id="pic-input" accept="image/*" multiple>
+                <button class="upload-btn" onclick="document.getElementById('pic-input').click()">
+                    사진 선택
+                </button>
+                <p style="margin-top: 15px; color: #666;">여러 사진을 선택하여 번호판을 인식하고 결과를 확인하세요</p>
+                <p style="margin-top: 15px; color: #666;">모든 사진은 1개 이상의 번호판이 있다를 가정합니다.</p>
+            </div>
+            <div id="pic-status"></div>
+
+            <div class="pic-results" id="pic-results" style="display: none;">
+                <h2>📊 분석 결과</h2>
+
+                <div class="pic-chart-container" id="pic-chart-container">
+                    <img src="" alt="chart" id="chart-image" style="object-fit: contain;" width="100%">
+                </div>
+                
+                <a id="res-download">모든 결과 다운로드 (ZIP)</a>
             </div>
         </div>
     </div>
