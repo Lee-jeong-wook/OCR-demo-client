@@ -5,8 +5,6 @@ const videoInput = document.getElementById('video-input');
 const picInput = document.getElementById('pic-input');
 const statusDiv = document.getElementById('status');
 const videoContainer = document.getElementById('video-container');
-const progressContainer = document.getElementById('progress-container');
-const progressFill = document.getElementById('progress-fill');
 
 let predictQueue = [];
 const predictMap = new Map()
@@ -54,7 +52,6 @@ function showStatus(message, type) {
 }
 
 videoInput.addEventListener('change', async (e) => {
-    console.log("change detected");
     const file = e.target.files[0];
     if (!file) return;
     
@@ -94,7 +91,6 @@ socket.on('frame', (data) => {
         detectionsDiv.innerHTML = data.detections.map(det => {
             const bgColor = '#d4edda';
             const textColor = '#155724';
-            console.log(det.plate_text);
             const txt = getPredictPlate(det.status === 'success' ? det.plate_text : null);
             return `
                 <div class="detection-item" style="background: ${bgColor};">
@@ -116,7 +112,7 @@ socket.on('video_info', (data) => {
 });
 
 socket.on('completed', (data) => {
-    showStatus(`분석 완료`);
+    showStatus(`분석 완료`, 'success');
     document.querySelector(".video_play_time").textContent = data.video_play_time;
 });
 
