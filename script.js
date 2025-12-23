@@ -1,4 +1,4 @@
-const socket = io('http://127.0.0.1:5000');
+const socket = io('http://192.168.10.110:5000');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const videoInput = document.getElementById('video-input');
@@ -15,7 +15,7 @@ function getPredictPlate(new_plate){
     if(!new_plate){
       tmp += 1;
     }
-    if(new_plate){
+    if(new_plate){  
       tmp = 0;
       predictQueue.push(new_plate);
       predictMap.set(new_plate, (predictMap.get(new_plate) || 0) + 1);
@@ -69,21 +69,30 @@ videoInput.addEventListener('change', async (e) => {
     videoInput.value = null;
     reader.readAsDataURL(file);
 });
-
+    
 socket.on('upload_success', (data) => {
     showStatus('번호판 인식 중...', 'processing');
     videoContainer.style.display = 'grid';
 });
 
+let previousImageUrl = null;
+
 socket.on('frame', (data) => {
-    // 캔버스에 프레임 그리기
+    const blob = new Blob([data.frame], { type: 'image/jpeg' });
+    const imageUrl = URL.createObjectURL(blob);
+
     const img = new Image();
     img.onload = () => {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
+
+        if (previousImageUrl) {
+            URL.revokeObjectURL(previousImageUrl);
+        }
+        previousImageUrl = imageUrl;
     };
-    img.src = 'data:image/jpeg;base64,' + data.frame;
+    img.src = imageUrl;
     
     // 탐지된 번호판 표시
     const detectionsDiv = document.getElementById('detections');
@@ -147,7 +156,7 @@ document.querySelectorAll("nav>div").forEach(e => {
         i.classList.toggle("active");
     }
     })
-})
+})  
 picInput.addEventListener('click', (e) => {
     e.target.value = null;
 })
@@ -164,15 +173,17 @@ picInput.addEventListener('change', (e) => {
     selectedPicFiles.forEach(file => {
         formData.append('images', file);
     });
+    console.log(formData.getAll('images'))
     
     try {
         
-        fetch(`http://127.0.0.1:5000/process_images`, {
+        fetch(`http://192.168.10.110:5000/process_images`, {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
+            console.log(data)
             if (data.success) {
                 const linkSource = `data:application/zip;base64,${data.zip_file}`;
                 const downloadLink = document.querySelector('#res-download');
