@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>번호판 인식 시스템</title>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -22,27 +21,22 @@
 
         <div class="content active">
             <div class="upload-section">
-                <input type="file" id="video-input" accept="*">
-                <button class="upload-btn" onclick="document.getElementById('video-input').click()">
-                    동영상 선택 및 분석 시작
+                <input type="file" id="image-input" accept="image/*">
+                <button class="upload-btn" onclick="document.getElementById('image-input').click()">
+                    이미지 선택 및 분석 시작
                 </button>
-                <p style="margin-top: 15px; color: #666;">실시간으로 번호판을 탐지하고 인식합니다</p>
+                <p style="margin-top: 15px; color: #666;">이미지를 업로드하여 번호판을 탐지하고 인식합니다</p>
+                <p style="margin-top: 10px; color: #999; font-size: 14px;">Base64 또는 Raw Buffer 방식으로 전송됩니다</p>
             </div>
 
             <div id="status"></div>
-                <div>총 영상 길이: <span class="video_time"></span>초</div>
-                <div>총 재생 시간: <span class="video_play_time"></span>초</div>
-            <div class="video-container" id="video-container" style="display:none;">
-                <div class="video-display">
+            <div class="image-container" id="image-container" style="display:none;">
+                <div class="image-display">
                     <canvas id="canvas"></canvas>
                 </div>
 
                 <div class="info-panel">
-                    <h3>실시간 정보</h3>
-                    <div class="stats">
-
-                    </div>
-                    <h3 style="margin-top: 20px;">인식된 번호판</h3>
+                    <h3>인식 결과</h3>
                     <div class="detections" id="detections"></div>
                 </div>
             </div>
@@ -66,7 +60,7 @@
                     <img src="" alt="chart" id="chart-image" style="object-fit: contain;" width="100%">
                 </div>
                 
-                <a id="res-download">모든 결과 다운로드 (ZIP)</a>
+                <a id="res-download" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">모든 결과 다운로드 (ZIP)</a>
             </div>
         </div>
     </div>
