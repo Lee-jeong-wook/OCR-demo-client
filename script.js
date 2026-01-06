@@ -117,6 +117,7 @@ function connectWebSocket() {
 }
 
 function handleWebSocketMessage(data) {
+    data = JSON.parse(data);
     const type = data.type;
     
     switch(type) {
@@ -165,6 +166,7 @@ function handleFrame(data) {
     try {
         // Decode base64 frame data
         const binaryString = atob(data.frame);
+        console.log(`Received frame of size: ${binaryString.length} bytes`);
         const bytes = new Uint8Array(binaryString.length);
         for (let i = 0; i < binaryString.length; i++) {
             bytes[i] = binaryString.charCodeAt(i);
